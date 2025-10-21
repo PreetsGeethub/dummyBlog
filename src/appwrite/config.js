@@ -8,8 +8,8 @@ export class Service {
 
     constructor() {
         this.client
-            .setEndpoint(conf.appwriteUrl)        // ✅
-            .setProject(conf.appwriteProjectId);  // ✅
+            .setEndpoint(conf.appwriteUrl)
+            .setProject(conf.appwriteProjectId);
     
         this.databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
@@ -17,9 +17,9 @@ export class Service {
 
     async createPost({ title, slug, content, featuredImage, status, userID }) {
         try {
-            return await this.databases.createDocument( // ✅ Added this line
+            return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionID,
+                conf.appwriteCollectionId, // ✅ Fixed: was appwriteCollectionID
                 slug,
                 {
                     title,
@@ -28,7 +28,7 @@ export class Service {
                     status,
                     userID,
                 }
-            ); // ✅ Added closing parenthesis
+            );
         }
         catch (error) {
             console.log("Appwrite service:: createPost ::error", error);
@@ -39,7 +39,7 @@ export class Service {
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionID,
+                conf.appwriteCollectionId, // ✅ Fixed
                 slug,
                 {
                     title,
@@ -57,7 +57,7 @@ export class Service {
         try {
             await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionID,
+                conf.appwriteCollectionId, // ✅ Fixed
                 slug,
             )
             return true; 
@@ -71,7 +71,7 @@ export class Service {
         try {
             return await this.databases.getDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionID,
+                conf.appwriteCollectionId, // ✅ Fixed
                 slug,
             )
         } catch (error) {
@@ -83,8 +83,8 @@ export class Service {
     async getPosts(queries = [Query.equal("status","active")]){
         try {
             return await this.databases.listDocuments(
-                conf.appwriteDatabaseId, // ✅ Fixed: was appwriteCollectionID
-                conf.appwriteCollectionID,
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId, // ✅ Fixed
                 queries,
             )
         } catch (error) {
@@ -93,12 +93,10 @@ export class Service {
         }
     }
 
-    // file upload services
-
     async uploadFile(file){
         try {
             return await this.bucket.createFile(
-                conf.appwriteBucketID,
+                conf.appwriteBucketId, // ✅ Fixed
                 ID.unique(),
                 file,
             )
@@ -111,7 +109,7 @@ export class Service {
     async deleteFile(fileId){
         try {
             await this.bucket.deleteFile(
-                conf.appwriteBucketID,
+                conf.appwriteBucketId, // ✅ Fixed
                 fileId
             )
             return true;
@@ -123,7 +121,7 @@ export class Service {
 
     getFilePreview(fileId){ 
         return this.bucket.getFilePreview(
-            conf.appwriteBucketID,
+            conf.appwriteBucketId, // ✅ Fixed
             fileId
         )
     }
